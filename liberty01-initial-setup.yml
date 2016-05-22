@@ -70,22 +70,4 @@
         mode: 0600
         backup: no
       with_items: "{{ SYSADMIN_ENVIRONMENT }}"
-
-# Install some packages we will need on our controller boxes
-# http://docs.openstack.org/liberty/install-guide-ubuntu/environment-sql-database.html
-# http://docs.openstack.org/liberty/install-guide-ubuntu/environment-nosql-database.html
-# http://docs.openstack.org/liberty/install-guide-ubuntu/environment-messaging.html
-- hosts: [liberty-controllers]
-  remote_user: mitchf
-  become: yes
-  become_method: sudo
-  vars_files:
-    - vars/liberty_vars.yml
-  tasks:
-    - name: Install Controller Packages
-      apt:
-        name: "{{ item }}"
-        update_cache: yes
-        install_recommends: yes
-      with_items: "{{ ctrl_packages }}"
 ...

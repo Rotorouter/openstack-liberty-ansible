@@ -30,16 +30,13 @@ system_packages:
 NTP_SERVER1: "{{ hostvars[ansible_fqdn]['ansible_dns']['nameservers'][0] }}"
 NTP_SERVER2: "{{ hostvars[ansible_fqdn]['ansible_dns']['nameservers'][1] }}"
 
-# Packages that should be installed on our Openstack Controllers
-ctrl_packages:
-  - rabbitmq-server
-
 # Packages to support the SQL database
 db_packages:
   - mariadb-server
   - python-pymysql
 
 # Packages to support the NoSQL database
+nosql_db_packages:
   - mongodb-server
   - mongodb-clients
   - python-pymongo
