@@ -1,10 +1,13 @@
 ---
+# Installing the message bus
+# http://docs.openstack.org/liberty/install-guide-ubuntu/environment-messaging.html
 - hosts: [liberty-controllers]
   remote_user: mitchf
   become: yes
   become_method: sudo
   vars_files: 
     - vars/liberty_vars.yml
+    - vars/liberty_passwords.yml
   tasks:
     - name: Install RabbitMQ
       apt: 
