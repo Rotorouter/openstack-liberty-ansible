@@ -3,11 +3,12 @@
 # http://docs.openstack.org/liberty/install-guide-ubuntu/environment-sql-database.html
 #
 - hosts: [liberty-controllers]
-  remote_user: "{{ SYSADMIN_NAME ]]"
+  remote_user: "{{ SYSADMIN_NAME }}"
   become: yes
   become_method: sudo
   vars_files:
     - vars/liberty_vars.yml
+    - vars/liberty_passwords.yml
   tasks:
     - name: Install SQL DB Packages
       apt:
@@ -43,21 +44,17 @@
     - name: Set MariaDB root Password
       mysql_user:
         name: root
-        host: "{{ DB_HOSTS }}"
+        host: "{{ item }}"
         password: "{{ DB_PASS }}"
         state: present
-    - name: Reload privilege tables
-      command: 'mysql -ne "{{ item }}"'
-      with_items: 
-        - FLUSH PRIVILEGES
-      changed_when: False
+      with_items: "{{ DB_HOSTS }}"
     - name: Remove anonymous users
-      command: 'mysql -ne "{{ item }}"'
-      with_items:
-        - DELETE FROM mysql.user WHERE User=''
+      mysql_user:
+        name: ''
+        state: absent
       changed_when: False
     - name: Disallow root login remotely
-      command: 'mysql -ne "{{ item }}"'
+      command: 'mysql -NBe "{{ item }}"'
       with_items:
         - DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1')
       changed_when: False

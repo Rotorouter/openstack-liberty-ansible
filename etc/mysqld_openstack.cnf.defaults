@@ -1,4 +1,4 @@
-[mysql]
+[mysqld]
 bind-address = ANSIBLE_MGMT_IP
 default-storage-engine = innodb
 innodb_file_per_table

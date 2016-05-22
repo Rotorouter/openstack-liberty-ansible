@@ -47,7 +47,7 @@ liberty-ctrl1.dom.local
 liberty-ctrl2.dom.local 
 liberty-swift1.dom.local
 liberty-swift2.dom.local
-liberty-comp1.dom.local
+comp1.dom.local
 liberty-comp2.dom.local
 [liberty-controllers]
 liberty-ctrl1.dom.local
@@ -56,5 +56,5 @@ liberty-ctrl2.dom.local
 liberty-swift1.dom.local
 liberty-swift2.dom.local
 [liberty-compute]
-liberty-comp1.dom.local
+comp1.dom.local
 liberty-comp2.dom.local
