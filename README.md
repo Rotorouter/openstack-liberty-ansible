@@ -8,4 +8,4 @@ $HOME/ansible/      Playbooks
 $HOME/ansible/etc/  Config files, templates, and fragments
 $HOME/ansible/vars/ Variable files
 
-$HOME/ansible/vars/liberty_vars.yml contains a bunch of passwords; change these to your taste. The passwords don't reflect ones in use by my employer or in any actual environment.
+This project is not endorsed or supported by my employer by and way, and does not reflect practices or platforms in use at that employer. This project contains no proprietary company information whatsoever.
