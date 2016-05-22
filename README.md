@@ -8,4 +8,6 @@ $HOME/ansible/      Playbooks
 $HOME/ansible/etc/  Config files, templates, and fragments
 $HOME/ansible/vars/ Variable files
 
+To use: edit the $HOME/ansible/vars/liberty_vars.yml to taste and run the playbooks in order (liberty01..., liberty02... etc.).
+
 This project is not endorsed or supported by my employer by and way, and does not reflect practices or platforms in use at that employer. This project contains no proprietary company information whatsoever.
