@@ -1,0 +1,90 @@
+---
+# Do our basic host setup. Assumes that hosts already have 
+# correct IP addressing on all interfaces and have connectivity 
+# to the Ansible orchestrator host via their management 
+# interfaces. I don't like chrony so this uses the plain jane
+# NTP client. Modify as you see fit.
+# http://docs.openstack.org/liberty/install-guide-ubuntu/environment-ntp-controller.html
+# http://docs.openstack.org/liberty/install-guide-ubuntu/environment-ntp-other.html
+# http://docs.openstack.org/liberty/install-guide-ubuntu/environment-packages.html
+- hosts: [liberty]
+  remote_user: "{{ SYSADMIN_NAME }}"
+  become: yes
+  become_method: sudo
+  vars_files: 
+    - vars/liberty_vars.yml
+  tasks:
+    - name: Install System Packages
+      apt:
+        name: "{{ item }}"
+        update_cache: yes
+        install_recommends: yes
+      with_items: "{{ system_packages }}"
+    - name: Dist-Upgrade
+      apt: 
+        upgrade: dist
+    - name: Copy ntp.conf from our Ansible orchestrator
+      copy:
+        src: etc/ntp.conf
+        dest: /etc/ntp.conf
+        owner: root
+        group: root
+        mode: 0644
+        backup: yes
+    - name: Update ntp.conf; add server 1
+      replace:
+        dest: /etc/ntp.conf
+        regexp: 'NTP_SERVER1'
+        replace: "{{ NTP_SERVER1 }}"
+        backup: yes
+    - name: Update ntp.conf; add server 2
+      replace:
+        dest: /etc/ntp.conf
+        regexp: 'NTP_SERVER2'
+        replace: "{{ NTP_SERVER2 }}"
+        backup: yes
+    - name: Update hosts file
+      copy:
+        src: /etc/hosts
+        dest: /etc/hosts
+        owner: root
+        group: root
+        mode: 0644
+        backup: yes
+    - name: Restart NTP
+      service:
+        name: ntp
+        enabled: yes
+        state: restarted
+
+# This copies over some shell dotfiles for the sysadmin's account
+# SYSADMIN_NAME should be the account you set up during the 
+# initial OS build
+    - name: Copy over User's environment variables
+      copy:
+        src: "{{ item }}"
+        dest: /home/{{ SYSADMIN_NAME }}/
+        owner: "{{ SYSADMIN_NAME }}"
+        group: "{{ SYSADMIN_NAME }}"
+        mode: 0600
+        backup: no
+      with_items: "{{ SYSADMIN_ENVIRONMENT }}"
+
+# Install some packages we will need on our controller boxes
+# http://docs.openstack.org/liberty/install-guide-ubuntu/environment-sql-database.html
+# http://docs.openstack.org/liberty/install-guide-ubuntu/environment-nosql-database.html
+# http://docs.openstack.org/liberty/install-guide-ubuntu/environment-messaging.html
+- hosts: [liberty-controllers]
+  remote_user: mitchf
+  become: yes
+  become_method: sudo
+  vars_files:
+    - vars/liberty_vars.yml
+  tasks:
+    - name: Install Controller Packages
+      apt:
+        name: "{{ item }}"
+        update_cache: yes
+        install_recommends: yes
+      with_items: "{{ ctrl_packages }}"
+...

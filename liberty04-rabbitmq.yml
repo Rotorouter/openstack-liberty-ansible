@@ -1,0 +1,23 @@
+---
+- hosts: [liberty-controllers]
+  remote_user: mitchf
+  become: yes
+  become_method: sudo
+  vars_files: 
+    - vars/liberty_vars.yml
+  tasks:
+    - name: Install RabbitMQ
+      apt: 
+        name: rabbitmq-server
+        update_cache: yes
+        install_recommends: yes
+    - name: Add RabbitMQ openstack User
+      rabbitmq_user: 
+        user: openstack
+        password: "{{ RABBIT_PASS }}"
+        vhost: /
+        configure_priv: .*
+        read_priv: .*
+        write_priv: .*
+        state: present
+...

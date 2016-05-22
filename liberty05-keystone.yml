@@ -1,0 +1,46 @@
+---
+- hosts: [liberty-controllers]
+  remote_user: mitchf
+  become: yes
+  become_method: sudo
+  vars_files: 
+    - vars/liberty_vars.yml
+  tasks:
+    - name: Install necessary packages
+      apt:
+        name: "{{ item }}"
+        update_cache: yes
+        install_recommends: yes
+      with_items: "{{ keystone_packages }}"
+    - name: Create the keystone Database
+      mysql_db:
+        name: keystone
+        login_user: root
+        login_password: "{{ DB_PASS }}"
+    - name: Create the keystone user 
+      mysql_user:
+        name: keystone
+        password: "{{ KEYSTONE_DBPASS }}"
+        priv: keystone.*:ALL
+        host: "{{ item }}"
+        state: present
+      with_items: "{{ DB_HOSTS }}"
+    - name: Stop keystone from starting automatically
+      command: echo "manual" > /etc/init/keystone.override
+    - name: Copy over keystone.conf
+      copy:
+        src: etc/keystone.conf.defaults
+        dest: /etc/keystone/keystone.conf
+        owner: root
+        group: root
+        mode: 0644
+        backup: yes
+#
+# Replace our KEYSTONE_DBPASS and ANSIBLE_HOSTNAME
+# variables here.
+#   - name: Edit the keystone.conf suitably
+#     something: ....
+#
+    - name: Populate the keystone database
+      command: /bin/sh -c "keystone-manage db_sync" keystone
+...

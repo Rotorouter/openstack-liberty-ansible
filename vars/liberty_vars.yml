@@ -1,0 +1,101 @@
+---
+# Our lovable sysadmin. This should be the login id 
+# for the account set up at OS setup time with Ubuntu
+# If the user account on the local management machine
+# is different from the one you would use to login to
+# the target client, you will need to statically set the 
+# name here.
+SYSADMIN_NAME: "{{ lookup('env','USER') }}"
+SYSADMIN_ENVIRONMENT:
+  - /home/{{ SYSADMIN_NAME }}/.bash_profile
+  - /home/{{ SYSADMIN_NAME }}/.bashrc
+  - /home/{{ SYSADMIN_NAME }}/.vimrc
+
+# Our default management IP address.
+ANSIBLE_MGMT_IP: "{{ hostvars[ansible_fqdn]['ansible_default_ipv4']['address'] }}"
+
+# packages that should be installed on all Openstack hosts
+system_packages:
+  - aptitude
+  - python
+  - python-apt
+  - ntp
+  - software-properties-common
+  - python-openstackclient
+
+# Our NTP servers. I assume you have 2 NTP servers, and they
+# are the same hosts already configured as the DNS servers
+# on your client machines. Add static values if those assumptions
+# don't apply.
+NTP_SERVER1: "{{ hostvars[ansible_fqdn]['ansible_dns']['nameservers'][0] }}"
+NTP_SERVER2: "{{ hostvars[ansible_fqdn]['ansible_dns']['nameservers'][1] }}"
+
+# Packages that should be installed on our Openstack Controllers
+ctrl_packages:
+  - rabbitmq-server
+
+# Packages to support the SQL database
+db_packages:
+  - mariadb-server
+  - python-pymysql
+
+# Packages to support the NoSQL database
+  - mongodb-server
+  - mongodb-clients
+  - python-pymongo
+
+# Packages to support the keystone identity service
+keystone_packages:
+  - python-mysqldb
+  - keystone
+  - apache2
+  - libapache2-mod-wsgi
+  - memcached
+  - python-memcache
+
+# Config files which should be identical across hosts. 
+# Do not put config files which require modification in here.
+static_conf_files: 
+  - etc/ntp.conf
+  - etc/hosts
+
+# Root directory to which to add static conf files on
+# the remote host.
+static_conf_dest: /etc/ 
+# The hosts to which we want to limit SQL database queries.
+DB_HOSTS:
+  - 127.0.0.1
+  - localhost
+  - ::1
+  - liberty-ctrl1
+  - liberty-ctrl2
+  - liberty-comp1
+  - liberty-comp2
+  - liberty-swift1
+  - liberty-swift2
+
+# produce this with: openssl rand -hex 64
+ADMIN_TOKEN: 144eb19b55896b9119082871ec5b004d1c9328ed2a6320f49c9e4fe99446365368aec26113007b6e9010dafb7ef564fa5b7a19f2a6f4a351eed0dd1167581e28
+
+# Replace each password after the colon with an appropriate password
+DB_PASS: mydbpass
+ADMIN_PASS: myadminpass
+CEILOMETER_DBPASS: myceilometerdbpass
+CEILOMETER_PASS: myceilometerpass
+CINDER_DBPASS: mycinderdbpass
+CINDER_PASS: mycinderpass
+DASH_DBPASS: mydashpass
+DEMO_PASS: mydemopass
+GLANCE_DBPASS: myglancedbpass
+GLANCE_PASS: myglancepass
+HEAT_DBPASS: myheatdbpass
+HEAT_DOMAIN_PASS: myheatdomainpass
+HEAT_PASS: myheatpass
+KEYSTONE_DBPASS: mykeystonedbpass
+NEUTRON_DBPASS: myneutrondbpass
+NEUTRON_PASS: myneutronpass
+NOVA_DBPASS: mynovadbpass
+NOVA_PASS: mynovapass
+RABBIT_PASS: myrabbitpass
+SWIFT_PASS: myswiftpass
+...

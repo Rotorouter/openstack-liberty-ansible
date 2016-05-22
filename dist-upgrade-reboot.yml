@@ -1,0 +1,14 @@
+---
+- hosts: [liberty]
+  remote_user: mitchf
+  become: yes
+  become_method: sudo
+  tasks:
+    - name: Update packages
+      apt: 
+        update_cache: yes 
+        install_recommends: yes
+        upgrade: dist
+    - name: Reboot
+      command: /sbin/shutdown -r +1
+...
