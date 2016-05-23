@@ -1,4 +1,7 @@
 [DEFAULT]
+# turn this off when your system is up and working unless you have infinite 
+# storage.
+verbose = True
 
 #
 # From keystone
@@ -548,7 +551,7 @@ log_dir = /var/log/keystone
 # Deprecated group/name - [DATABASE]/sql_connection
 # Deprecated group/name - [sql]/connection
 #connection = <None>
-connection = mysql+pymysql://keystone:KEYSTONE_DBPASS@ANSIBLE_HOSTNAME/keystone
+connection = mysql+pymysql://keystone:KEYSTONE_DBPASS@localhost/keystone
 
 # The SQLAlchemy connection string to use to connect to the slave database.
 # (string value)

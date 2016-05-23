@@ -1,10 +1,14 @@
 ---
+#
+# http://docs.openstack.org/liberty/install-guide-ubuntu/keystone-install.html
+#
 - hosts: [liberty-controllers]
   remote_user: mitchf
   become: yes
   become_method: sudo
   vars_files: 
     - vars/liberty_vars.yml
+    - vars/liberty_passwords.yml
   tasks:
     - name: Install necessary packages
       apt:
@@ -35,12 +39,22 @@
         group: root
         mode: 0644
         backup: yes
-#
-# Replace our KEYSTONE_DBPASS and ANSIBLE_HOSTNAME
-# variables here.
-#   - name: Edit the keystone.conf suitably
-#     something: ....
-#
+    - name: Add the admin token to keystone.conf
+      replace:
+        dest: /etc/keystone/keystone.conf
+        regexp: 'ADMIN_TOKEN'
+        replace: "{{ ADMIN_TOKEN }}"
+        backup: yes
+    - name: Configure database password in keystone.conf
+      replace:
+        dest: /etc/keystone/keystone.conf
+        regexp: 'KEYSTONE_DBPASS'
+        replace: "{{ KEYSTONE_DBPASS }}"
     - name: Populate the keystone database
       command: /bin/sh -c "keystone-manage db_sync" keystone
+    - name: Update apache2.conf
+      lineinfile: 
+        dest: /etc/apache2/apache2.conf
+        insertafter: '^# Global configuration\n#\n'
+        line: 'ServerName "{{ ANSIBLE_FQDN }}"'
 ...

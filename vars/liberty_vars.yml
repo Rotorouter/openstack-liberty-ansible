@@ -13,6 +13,8 @@ SYSADMIN_ENVIRONMENT:
 
 # Our default management IP address.
 ANSIBLE_MGMT_IP: "{{ hostvars[ansible_fqdn]['ansible_default_ipv4']['address'] }}"
+# Our unqualified hostname
+ANSIBLE_FQDN: "{{ hostvars[ansible_fqdn]['ansible_fqdn'] }}"
 
 # packages that should be installed on all Openstack hosts
 system_packages:
@@ -34,6 +36,12 @@ NTP_SERVER2: "{{ hostvars[ansible_fqdn]['ansible_dns']['nameservers'][1] }}"
 db_packages:
   - mariadb-server
   - python-pymysql
+
+# MariaDB files to change to UTF8
+mariadb_base_files:
+  - /etc/mysql/mariadb.conf.d/50-client.cnf
+  - /etc/mysql/mariadb.conf.d/50-mysql-clients.cnf
+  - /etc/mysql/mariadb.conf.d/50-server.cnf
 
 # Packages to support the NoSQL database
 nosql_db_packages:
