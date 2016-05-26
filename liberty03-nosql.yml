@@ -4,7 +4,7 @@
 # Edit the /etc/mongodb.conf config file on the remote host
 # and replace ANSIBLE_MGMT_IP with the host management IP
 - hosts: [liberty-controllers]
-  remote_user: mitchf
+  remote_user: "{{ SYSADMIN_NAME }}"
   become: yes
   become_method: sudo
   vars_files:

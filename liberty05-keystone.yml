@@ -3,7 +3,7 @@
 # http://docs.openstack.org/liberty/install-guide-ubuntu/keystone-install.html
 #
 - hosts: [liberty-controllers]
-  remote_user: mitchf
+  remote_user: "{{ SYSADMIN_NAME }}"
   become: yes
   become_method: sudo
   vars_files: 

@@ -2,7 +2,7 @@
 # Installing the message bus
 # http://docs.openstack.org/liberty/install-guide-ubuntu/environment-messaging.html
 - hosts: [liberty-controllers]
-  remote_user: mitchf
+  remote_user: "{{ SYSADMIN_NAME }}"
   become: yes
   become_method: sudo
   vars_files: 
