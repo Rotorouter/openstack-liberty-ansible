@@ -15,6 +15,21 @@
     - vars/liberty_vars.yml
     - vars/liberty_passwords.yml
   tasks:
+
+# This copies over some shell dotfiles for the sysadmin's account
+# SYSADMIN_NAME should be the account you set up during the
+# initial OS build
+    - name: Copy over User's environment variables
+      copy:
+        src: "{{ item }}"
+        dest: /home/{{ SYSADMIN_NAME }}/
+        owner: "{{ SYSADMIN_NAME }}"
+        group: "{{ SYSADMIN_NAME }}"
+        mode: 0600
+        backup: no
+      with_items: "{{ SYSADMIN_ENVIRONMENT }}"
+
+# Install our Openstack dependencies
     - name: Install System Packages
       apt:
         name: "{{ item }}"
@@ -57,17 +72,4 @@
         name: ntp
         enabled: yes
         state: restarted
-
-# This copies over some shell dotfiles for the sysadmin's account
-# SYSADMIN_NAME should be the account you set up during the 
-# initial OS build
-    - name: Copy over User's environment variables
-      copy:
-        src: "{{ item }}"
-        dest: /home/{{ SYSADMIN_NAME }}/
-        owner: "{{ SYSADMIN_NAME }}"
-        group: "{{ SYSADMIN_NAME }}"
-        mode: 0600
-        backup: no
-      with_items: "{{ SYSADMIN_ENVIRONMENT }}"
 ...
