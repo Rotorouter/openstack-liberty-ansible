@@ -1,0 +1,22 @@
+---
+#
+# http://docs.openstack.org/liberty/install-guide-ubuntu/keystone-users.html
+#
+- hosts: [liberty-controllers]
+  remote_user: "{{ SYSADMIN_NAME }}"
+  become: yes
+  become_method: sudo
+  vars_files: 
+    - vars/liberty_vars.yml
+    - vars/liberty_passwords.yml
+  tasks:
+    - name: Create the admin project
+      os_project:
+        name: admin
+        domain_id: default
+        description: "Admin Project"
+        auth:
+          username: "{{ OS_USERNAME }}"
+          password: "{{ ADMIN_TOKEN }}"
+          auth_url: "{{ OS_AUTH_URL }}"
+...

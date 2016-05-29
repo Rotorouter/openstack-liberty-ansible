@@ -21,6 +21,7 @@ system_packages:
   - aptitude
   - python
   - python-apt
+  - python-pip
   - ntp
   - software-properties-common
   - python-openstackclient
@@ -78,4 +79,9 @@ DB_HOSTS:
   - liberty-comp2
   - liberty-swift1
   - liberty-swift2
+
+# Keystone variables
+OS_USERNAME: admin
+OS_AUTH_URL: http://{{ ANSIBLE_FQDN }}:35357/v3
+OS_IDENTITY_API_VERSION: 3
 ...
