@@ -50,6 +50,11 @@
         dest: /etc/keystone/keystone.conf
         regexp: 'KEYSTONE_DBPASS'
         replace: "{{ KEYSTONE_DBPASS }}"
+    - name: Add the hostname to keystone.conf
+      replace:
+        dest: /etc/keystone/keystone.conf
+        regexp: 'CONTROLLER'
+        replace: "{{ ANSIBLE_FQDN }}"
     - name: Populate the keystone database
       command: /bin/sh -c "keystone-manage db_sync" keystone
     - name: Update apache2.conf

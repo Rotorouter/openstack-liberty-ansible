@@ -26,12 +26,13 @@ system_packages:
   - software-properties-common
   - python-openstackclient
 
-# Our NTP servers. I assume you have 2 NTP servers, and they
-# are the same hosts already configured as the DNS servers
-# on your client machines. Add static values if those assumptions
-# don't apply.
+# Our NTP servers. You can either pick up the servers from your 
+# ansible facts (I assume your DNS servers == your NTP servers)
+# or you can put static values.
 NTP_SERVER1: "{{ hostvars[ansible_fqdn]['ansible_dns']['nameservers'][0] }}"
 NTP_SERVER2: "{{ hostvars[ansible_fqdn]['ansible_dns']['nameservers'][1] }}"
+#NTP_SERVER1: 172.16.3.13
+#NTP_SERVER2: 172.16.1.13
 
 # Packages to support the SQL database
 db_packages:
@@ -73,12 +74,13 @@ DB_HOSTS:
   - 127.0.0.1
   - localhost
   - ::1
-  - liberty-ctrl1
-  - liberty-ctrl2
-  - liberty-comp1
-  - liberty-comp2
-  - liberty-swift1
-  - liberty-swift2
+  - liberty-ctrl1.dom.local
+  - liberty-ctrl2.dom.local
+  - liberty-ctrl3.dom.local
+  - liberty-comp1.dom.local
+  - liberty-comp2.dom.local
+  - liberty-swift1.dom.local
+  - liberty-swift2.dom.local
 
 # Keystone variables
 OS_USERNAME: admin

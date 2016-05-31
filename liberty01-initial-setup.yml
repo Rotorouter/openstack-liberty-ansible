@@ -2,8 +2,7 @@
 # Do our basic host setup. Assumes that hosts already have 
 # correct IP addressing on all interfaces and have connectivity 
 # to the Ansible orchestrator host via their management 
-# interfaces. I don't like chrony so this uses the plain jane
-# NTP client. Modify as you see fit.
+# interfaces. Uses the plain jane NTP client instead of chrony.
 # http://docs.openstack.org/liberty/install-guide-ubuntu/environment-ntp-controller.html
 # http://docs.openstack.org/liberty/install-guide-ubuntu/environment-ntp-other.html
 # http://docs.openstack.org/liberty/install-guide-ubuntu/environment-packages.html
@@ -15,20 +14,6 @@
     - vars/liberty_vars.yml
     - vars/liberty_passwords.yml
   tasks:
-
-# This copies over some shell dotfiles for the sysadmin's account
-# SYSADMIN_NAME should be the account you set up during the
-# initial OS build
-    - name: Copy over User's environment variables
-      copy:
-        src: "{{ item }}"
-        dest: /home/{{ SYSADMIN_NAME }}/
-        owner: "{{ SYSADMIN_NAME }}"
-        group: "{{ SYSADMIN_NAME }}"
-        mode: 0600
-        backup: no
-      with_items: "{{ SYSADMIN_ENVIRONMENT }}"
-
 # Install our Openstack dependencies
     - name: Install System Packages
       apt:
@@ -41,13 +26,13 @@
         upgrade: dist
     - name: Update python pip
       command: 'pip install --upgrade pip'
-    - name: Install Openstack Ansible python module dependencies
-      pip:
-        name: "{{ item }}"
-      with_items:
-        - pytz
-        - shade
-    - name: Copy ntp.conf from our Ansible orchestrator
+#    - name: Install Openstack Ansible python module dependencies
+#      pip:
+#        name: "{{ item }}"
+#      with_items:
+#        - pytz
+#        - shade
+    - name: Copy ntp.conf from our Ansible control box
       copy:
         src: etc/ntp.conf
         dest: /etc/ntp.conf

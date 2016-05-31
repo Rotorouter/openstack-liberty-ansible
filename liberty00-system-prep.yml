@@ -1,0 +1,36 @@
+---
+# Do our basic host setup. Assumes that hosts already have
+# correct IP addressing on all interfaces and have connectivity
+# to the Ansible orchestrator host via their management
+# interfaces.
+- hosts: [liberty]
+  remote_user: "{{ SYSADMIN_NAME }}"
+  become: yes
+  become_method: sudo
+  vars_files:
+    - vars/liberty_vars.yml
+    - vars/liberty_passwords.yml
+  tasks:
+    - name: Copy over User's environment variables
+      copy:
+        src: "{{ item }}"
+        dest: /home/{{ SYSADMIN_NAME }}/
+        owner: "{{ SYSADMIN_NAME }}"
+        group: "{{ SYSADMIN_NAME }}"
+        mode: 0600
+        backup: no
+      with_items: "{{ SYSADMIN_ENVIRONMENT }}"
+    - name: Update SSH authorized_keys
+      copy:
+        src: /home/{{ SYSADMIN_NAME }}/.ssh/authorized_keys
+        dest: /home/{{ SYSADMIN_NAME }}/.ssh/authorized_keys
+        owner: "{{ SYSADMIN_NAME }}"
+        group: "{{ SYSADMIN_NAME }}"
+        mode: 0600
+        backup: no
+    - name: Dist-Upgrade
+      apt:
+        upgrade: dist
+    - name: Reboot
+      command: /sbin/shutdown -r +1
+...

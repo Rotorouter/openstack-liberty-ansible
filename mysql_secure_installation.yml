@@ -1,7 +1,4 @@
 ---
-# Install and set up our SQL databases
-# http://docs.openstack.org/liberty/install-guide-ubuntu/environment-sql-database.html
-#
 - hosts: [liberty-controllers]
   remote_user: "{{ SYSADMIN_NAME }}"
   become: yes
@@ -10,44 +7,6 @@
     - vars/liberty_vars.yml
     - vars/liberty_passwords.yml
   tasks:
-    - name: Install SQL DB Packages
-      apt:
-        name: "{{ item }}"
-        update_cache: yes
-        install_recommends: yes
-      with_items: "{{ db_packages }}"
-    - name: Copy MariaDB Configfile Template
-      copy:
-        src: etc/mysqld_openstack.cnf.defaults
-        dest: /etc/mysql/conf.d/mysqld_openstack.cnf
-        owner: root
-        group: root
-        mode: 0644
-        backup: yes
-
-# Add our bind-address to /etc/mysql/mariadb.cnf
-    - name: Update the MariaDB Configfile
-      lineinfile:
-        dest: /etc/mysql/mariadb.cnf
-        line: "[mysqld]\nbind-address = {{ ANSIBLE_MGMT_IP }}"
-        insertafter: EOF
-        state: present
-
-# For the below hack see
-# https://bugs.launchpad.net/openstack-manuals/+bug/1575688
-# Only relevant to Ubuntu 16.04
-    - name: Update the MariaDB base configfiles for UTF8
-      replace:
-        dest: "{{ item }}"
-        regexp: 'utf8mb4'
-        replace: 'utf8'
-      with_items: "{{ mariadb_base_files }}"
-    - name: Restart mysql
-      service: 
-        name: mysql
-        enabled: yes
-        state: restarted
-
 # Run the equivalent of sudo mysql_secure_installation
 # Modified from https://github.com/PCextreme/ansible-role-mariadb/blob/master/tasks/mysql_secure_installation.yml
     - name: Set MariaDB root Password
@@ -72,7 +31,7 @@
       with_items:
         - DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1')
       changed_when: False
-    - name: Remove test database 
+    - name: Remove test database
       mysql_db:
         name: test
         login_user: root

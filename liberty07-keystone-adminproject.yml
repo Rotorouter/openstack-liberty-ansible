@@ -10,6 +10,27 @@
     - vars/liberty_vars.yml
     - vars/liberty_passwords.yml
   tasks:
+    - name: Create /etc/openstack
+      file: 
+        path: /etc/openstack
+        state: directory
+        mode: 0644
+        owner: root
+        group: root
+    - name: Copy over clouds.yaml
+      copy:
+        src: vars/clouds.yaml
+        dest: /etc/openstack/clouds.yaml
+        owner: root
+        group: root
+        mode: 0640
+        backup: yes
+    - name: Update clouds.yaml
+      replace:
+        dest: /etc/openstack/clouds.yaml
+        regexp: 'CONTROLLER'
+        replace: "{{ ANSIBLE_FQDN }}"
+        backup: no
     - name: Create the admin project
       os_project:
         name: admin
@@ -19,4 +40,5 @@
           username: "{{ OS_USERNAME }}"
           password: "{{ ADMIN_TOKEN }}"
           auth_url: "{{ OS_AUTH_URL }}"
+          project_name: admin
 ...
