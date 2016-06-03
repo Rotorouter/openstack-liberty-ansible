@@ -12,9 +12,9 @@ SYSADMIN_ENVIRONMENT:
   - /home/{{ SYSADMIN_NAME }}/.vimrc
 
 # Our default management IP address.
-ANSIBLE_MGMT_IP: "{{ hostvars[ansible_fqdn]['ansible_default_ipv4']['address'] }}"
+ANSIBLE_MGMT_IP: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
 # Our unqualified hostname
-ANSIBLE_FQDN: "{{ hostvars[ansible_fqdn]['ansible_fqdn'] }}"
+ANSIBLE_FQDN: "{{ hostvars[inventory_hostname]['ansible_fqdn'] }}"
 
 # packages that should be installed on all Openstack hosts
 system_packages:
@@ -29,8 +29,8 @@ system_packages:
 # Our NTP servers. You can either pick up the servers from your 
 # ansible facts (I assume your DNS servers == your NTP servers)
 # or you can put static values.
-NTP_SERVER1: "{{ hostvars[ansible_fqdn]['ansible_dns']['nameservers'][0] }}"
-NTP_SERVER2: "{{ hostvars[ansible_fqdn]['ansible_dns']['nameservers'][1] }}"
+NTP_SERVER1: "{{ hostvars[inventory_hostname]['ansible_dns']['nameservers'][0] }}"
+NTP_SERVER2: "{{ hostvars[inventory_hostname]['ansible_dns']['nameservers'][1] }}"
 #NTP_SERVER1: 172.16.3.13
 #NTP_SERVER2: 172.16.1.13
 
