@@ -3,6 +3,9 @@
   remote_user: "{{ SYSADMIN_NAME }}"
   become: yes
   become_method: sudo
+  vars_files:
+    - vars/liberty_vars.yml
+    - vars/liberty_passwords.yml
   tasks:
     - name: Update packages
       apt: 
