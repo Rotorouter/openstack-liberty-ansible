@@ -25,6 +25,7 @@ system_packages:
   - ntp
   - software-properties-common
   - python-openstackclient
+  - libmysqlclient-dev
 
 # Our NTP servers. You can either pick up the servers from your 
 # ansible facts (I assume your DNS servers == your NTP servers)
