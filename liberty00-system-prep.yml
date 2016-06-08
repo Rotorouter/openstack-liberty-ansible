@@ -23,6 +23,12 @@
     - name: Update .keystone
       replace:
         dest: /home/{{ SYSADMIN_NAME }}/.keystone
+        regexp: 'ADMIN_TOKEN'
+        replace: "{{ ADMIN_TOKEN }}"
+        backup: no
+    - name: Update .keystone
+      replace:
+        dest: /home/{{ SYSADMIN_NAME }}/.keystone
         regexp: 'ANSIBLE_FQDN'
         replace: "{{ ANSIBLE_FQDN }}"
         backup: no
