@@ -20,6 +20,12 @@
         mode: 0600
         backup: no
       with_items: "{{ SYSADMIN_ENVIRONMENT }}"
+    - name: Update .keystone
+      replace:
+        dest: /home/{{ SYSADMIN_NAME }}/.keystone
+        regexp: 'ANSIBLE_FQDN'
+        replace: "{{ ANSIBLE_FQDN }}"
+        backup: no
     - name: Update SSH authorized_keys
       copy:
         src: /home/{{ SYSADMIN_NAME }}/.ssh/authorized_keys

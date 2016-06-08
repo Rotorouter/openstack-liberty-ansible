@@ -10,6 +10,7 @@ SYSADMIN_ENVIRONMENT:
   - /home/{{ SYSADMIN_NAME }}/.bash_profile
   - /home/{{ SYSADMIN_NAME }}/.bashrc
   - /home/{{ SYSADMIN_NAME }}/.vimrc
+  - /home/{{ SYSADMIN_NAME }}/.keystone
 
 # Our default management IP address.
 ANSIBLE_MGMT_IP: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
